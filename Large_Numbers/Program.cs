@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 
 var template = new List<string>()
 {
@@ -11,18 +10,17 @@ var template = new List<string>()
 
 var bitsAmount = 16;
 var expectedSequences = (int)Math.Pow(2, bitsAmount);
-var stopWatch = new Stopwatch();
-stopWatch.Start();
 
 var task = CalculateAsync(template, expectedSequences);
 
+var loadingWord = "Loading";
+
 Console.CursorVisible = false;
-var loading = "Loading";
-Console.Write(loading);
+Console.Write(loadingWord);
 
 while (!task.IsCompleted)
 {
-    Console.SetCursorPosition(loading.Length, 0);
+    Console.SetCursorPosition(loadingWord.Length, 0);
 
     for (int i = 0; i < 4; i++)
     {
@@ -30,28 +28,20 @@ while (!task.IsCompleted)
         Console.Write(".");
     }
 
-    Console.SetCursorPosition(loading.Length,0);
+    Console.SetCursorPosition(loadingWord.Length,0);
 
     for (int i = 0; i < 4; i++)
         Console.Write(" ");
 }
 
+var resultList = task.Result;
+
 Console.Clear();
 
-foreach (var line in task.Result)
-{
-    //var halfByte = 4;
-    //var halfBytes = line.Length / 4;
-
-    //for (int i = 1; i < halfBytes + 1; i++)
-    //{
-    //    var t = line.Take(halfByte * i);
-    //}
-
+foreach (var line in resultList)
     Console.WriteLine(line);
-}
 
-Console.WriteLine(task.Result.Count);
+Console.WriteLine(resultList.Count);
 
 Console.ReadKey();
 
@@ -85,3 +75,11 @@ static List<string> Calculate(List<string> s, int num)
 
     return s.Count < num ? Calculate(s, num) : s;
 }
+
+//var halfByte = 4;
+//var halfBytes = line.Length / 4;
+
+//for (int i = 1; i < halfBytes + 1; i++)
+//{
+//    var t = line.Take(halfByte * i);
+//}
