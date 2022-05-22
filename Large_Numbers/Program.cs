@@ -93,7 +93,7 @@ static List<string> Calculate1(List<string> s, int num)
 
     s = s.Concat(buffer).ToList();
 
-    return s.Count < num ? Calculate2(s, num) : s;
+    return s.Count < num ? Calculate1(s, num) : s;
 }
 
 static List<string> Calculate2(List<string> s, int num)
