@@ -11,7 +11,7 @@ Task.Factory.StartNew(() =>
         "11"
     };
 
-    var bitsAmount = 32;
+    var bitsAmount = 16;
     var expectedSequences = (int)Math.Pow(2, bitsAmount);
 
     var stopWatch = new Stopwatch();
@@ -37,7 +37,7 @@ Task.Factory.StartNew(() =>
         "11"
     };
 
-    var bitsAmount = 32;
+    var bitsAmount = 16;
     var expectedSequences = (int)Math.Pow(2, bitsAmount);
     var stopWatch = new Stopwatch();
     stopWatch.Start();
@@ -93,10 +93,7 @@ static List<string> Calculate1(List<string> s, int num)
 
     s = s.Concat(buffer).ToList();
 
-    if (s.Count < num)
-        return Calculate1(s, num);
-
-    return s;
+    return s.Count < num ? Calculate2(s, num) : s;
 }
 
 static List<string> Calculate2(List<string> s, int num)
@@ -125,9 +122,6 @@ static List<string> Calculate2(List<string> s, int num)
     foreach (var temp in buffer)
         s.Add(temp);
 
-    if (s.Count < num)
-        return Calculate2(s, num);
-
-    return s;
+    return s.Count < num ? Calculate2(s, num) : s;
 }
 
