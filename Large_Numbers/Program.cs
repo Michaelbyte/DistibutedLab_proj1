@@ -14,17 +14,31 @@ var expectedSequences = (int)Math.Pow(2, bitsAmount);
 var stopWatch = new Stopwatch();
 stopWatch.Start();
 
-List<string> result = Calculate(template, expectedSequences);
+var task = CalculateAsync(template, expectedSequences);
 
-TimeSpan ts = stopWatch.Elapsed;
-var runtime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-        ts.Hours, ts.Minutes, ts.Seconds,
-        ts.Milliseconds / 10);
+Console.CursorVisible = false;
+var loading = "Loading";
+Console.Write(loading);
 
-Console.WriteLine($"runtime of : {nameof(Calculate)}" + runtime);
+while (!task.IsCompleted)
+{
+    Console.SetCursorPosition(loading.Length, 0);
 
+    for (int i = 0; i < 4; i++)
+    {
+        Thread.Sleep(1000);
+        Console.Write(".");
+    }
 
-foreach (var line in result)
+    Console.SetCursorPosition(loading.Length,0);
+
+    for (int i = 0; i < 4; i++)
+        Console.Write(" ");
+}
+
+Console.Clear();
+
+foreach (var line in task.Result)
 {
     //var halfByte = 4;
     //var halfBytes = line.Length / 4;
@@ -37,9 +51,14 @@ foreach (var line in result)
     Console.WriteLine(line);
 }
 
-Console.WriteLine(result.Count);
+Console.WriteLine(task.Result.Count);
 
 Console.ReadKey();
+
+static Task<List<string>> CalculateAsync(List<string> s, int num)
+{
+    return Task.Run(() => Calculate(s, num));
+}
 
 static List<string> Calculate(List<string> s, int num)
 {
