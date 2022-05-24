@@ -1,13 +1,13 @@
-﻿using System.Text;
-
-
-var tree = new BinaryTree("0", 4);
-tree.BuildTree();
-
-tree.PrintTree();
+﻿var tree0 = new BinaryTree("0", 16);
+var tree1 = new BinaryTree("1", 16);
+tree0.BuildTree();
+tree1.BuildTree();
 
 Console.WriteLine();
-Console.WriteLine(tree.NodesAmount);
+
+tree0.PrintCombinations();
+tree1.PrintCombinations();
+Console.WriteLine(tree0.CombinationsGenerated + tree1.CombinationsGenerated);
 
 Console.ReadKey();
 
@@ -41,6 +41,7 @@ class BinaryTree
     private int _currentDepth = 0;
     private List<Node> markedNodes = new List<Node>();
     public int NodesAmount { get; set; } = 0;
+    public int CombinationsGenerated { get; set; } = 0;
 
     public BinaryTree(string data, int keyLength)
     {
@@ -61,6 +62,11 @@ class BinaryTree
         PrintNode(Root);
         _currentDepth = 0;
         markedNodes.Clear();
+    }
+
+    public void PrintCombinations()
+    {
+        Step(Root, "");
     }
 
     public void Do(Node current)
@@ -100,9 +106,24 @@ class BinaryTree
 
         _currentDepth++;
         PrintNode(current.LeftChild);
-        _currentDepth--;
-        _currentDepth++;
         PrintNode(current.RightChild);
+        _currentDepth--;
+    }
+
+    public void Step(Node current, string combination)
+    {
+        combination += current.Data;
+
+        if (current.LeftChild == null && current.RightChild == null)
+        {
+            Console.WriteLine(combination);
+            CombinationsGenerated += 1;
+            return;
+        }
+
+        _currentDepth++;
+        Step(current.LeftChild, combination);
+        Step(current.RightChild, combination);
         _currentDepth--;
     }
 }
