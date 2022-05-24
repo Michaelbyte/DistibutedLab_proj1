@@ -3,21 +3,16 @@ static void Calculate(int n, int m, string prefix = null)
 {
     if (m == 0)
     {
-        var halfByte = 4;
         var halfBytes = prefix.Length / 4;
         var result = "0x";
 
-        for (int i = 1; i < halfBytes + 1; i++)
+        for (int i = 0; i < halfBytes; i++)
         {
             var t = "";
-            var prefixCopy = new List<char>();
 
-            var temp = "";
-
-            var half = prefixCopy.Take(halfByte * i); // nado podumat kak eto normalno sdelat
-            prefixCopy = prefix.Skip(halfByte * i).ToList();
+            var halfByte = prefix.Skip(4 * i).Take(4);
             
-            foreach (var elem in half)
+            foreach (var elem in halfByte)
                 t += elem;
 
             var bitWeight = 0;
@@ -49,7 +44,7 @@ static void Calculate(int n, int m, string prefix = null)
     }
 }
 
-Calculate(1, 8);
+Calculate(1, 64);
 
 Console.ReadKey();
 
