@@ -8,22 +8,15 @@ static void Calculate(int n, int m, string prefix = null)
 
         for (int i = 0; i < halfBytes; i++)
         {
-            var t = "";
-
-            var halfByte = prefix.Skip(4 * i).Take(4);
-            
-            foreach (var elem in halfByte)
-                t += elem;
-
+            var halfByte = prefix.Skip(4 * i).Take(4).ToArray();
             var bitWeight = 0;
 
-            for (int j = 0; j < t.Length; j++)
+            for (int j = 0; j < halfByte.Length; j++)
             {
-                if (t[j] == '0')
+                if (halfByte[j] == '0')
                     continue;
 
                 var value = (int)Math.Pow(2, j);
-
                 bitWeight += value;
             }
 
