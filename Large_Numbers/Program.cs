@@ -1,129 +1,62 @@
-﻿var tree0 = new BinaryTree("0", 16);
-var tree1 = new BinaryTree("1", 16);
-tree0.BuildTree();
-tree1.BuildTree();
-
-Console.WriteLine();
-
-tree0.PrintCombinations();
-tree1.PrintCombinations();
-Console.WriteLine(tree0.CombinationsGenerated + tree1.CombinationsGenerated);
-
-Console.ReadKey();
-
-class Node
+﻿
+static void Calculate(int n, int m, string prefix = null)
 {
-    public string Data { get; set; }
-    public Node LeftChild { get; set; }
-    public Node RightChild { get; set; }
-    public Node Parent { get; set; }
+    if (m == 0)
+    {
+        var halfByte = 4;
+        var halfBytes = prefix.Length / 4;
+        var result = "0x";
 
-    public void AddRight()
-    {
-        RightChild = new Node() { Data = "1", Parent = this };
-    }
-    public void AddLeft()
-    {
-        LeftChild = new Node() { Data = "0", Parent = this };
+        for (int i = 1; i < halfBytes + 1; i++)
+        {
+            var t = "";
+            var prefixCopy = new List<char>();
+
+            var temp = "";
+
+            var half = prefixCopy.Take(halfByte * i); // nado podumat kak eto normalno sdelat
+            prefixCopy = prefix.Skip(halfByte * i).ToList();
+            
+            foreach (var elem in half)
+                t += elem;
+
+            var bitWeight = 0;
+
+            for (int j = 0; j < t.Length; j++)
+            {
+                if (t[j] == '0')
+                    continue;
+
+                var value = (int)Math.Pow(2, j);
+
+                bitWeight += value;
+            }
+
+            string adding = bitWeight < 10 ? Convert.ToString(bitWeight) : Convert.ToString((char)(bitWeight + 55));
+
+            result += adding;
+        }
+
+        Console.WriteLine(result);
+        return;
     }
 
-    public override string ToString()
+    for (int i = 0; i < n+1; i++)
     {
-        return $"{LeftChild.Data} <- {Data} -> {RightChild.Data}";
+        prefix += i;
+        Calculate(n, m - 1, prefix);
+        prefix = prefix.Remove(prefix.Length - 1);
     }
 }
 
-class BinaryTree
+Calculate(1, 8);
+
+Console.ReadKey();
+
+static void PrintEnumerable<T>(IEnumerable<T> values)
 {
-    public Node Root { get; private set; }
-    public int TreeDepth { get; private set; }
+    foreach (var value in values)
+        Console.Write(value + " ");
 
-    private int _currentDepth = 0;
-    private List<Node> markedNodes = new List<Node>();
-    public int NodesAmount { get; set; } = 0;
-    public int CombinationsGenerated { get; set; } = 0;
-
-    public BinaryTree(string data, int keyLength)
-    {
-        Root = new Node() { Data = data };
-        TreeDepth = keyLength - 1;
-        NodesAmount++;
-    }
-
-    public void BuildTree()
-    {
-        var current = Root;
-        Do(current);
-        _currentDepth = 0;
-    }
-
-    public void PrintTree()
-    {
-        PrintNode(Root);
-        _currentDepth = 0;
-        markedNodes.Clear();
-    }
-
-    public void PrintCombinations()
-    {
-        Step(Root, "");
-    }
-
-    public void Do(Node current)
-    {
-        if (_currentDepth == TreeDepth)
-            return;
-
-        if (current.LeftChild == null)
-        {
-            current.AddLeft();
-            _currentDepth++;
-            NodesAmount++;
-            Do(current.LeftChild);
-            _currentDepth--;
-        }
-            
-        if (current.RightChild == null)
-        {
-            current.AddRight();
-            NodesAmount++;
-            _currentDepth++;
-            Do(current.RightChild);
-            _currentDepth--;
-        }
-    }
-
-    public void PrintNode(Node current) // just to check the tree
-    {
-        if (current == null)
-            return;
-
-        for (int i = 0; i < _currentDepth; i++)
-        {
-            Console.Write("-");
-        }
-        Console.WriteLine(current.Data);
-
-        _currentDepth++;
-        PrintNode(current.LeftChild);
-        PrintNode(current.RightChild);
-        _currentDepth--;
-    }
-
-    public void Step(Node current, string combination)
-    {
-        combination += current.Data;
-
-        if (current.LeftChild == null && current.RightChild == null)
-        {
-            Console.WriteLine(combination);
-            CombinationsGenerated += 1;
-            return;
-        }
-
-        _currentDepth++;
-        Step(current.LeftChild, combination);
-        Step(current.RightChild, combination);
-        _currentDepth--;
-    }
+    Console.WriteLine();
 }
