@@ -69,7 +69,7 @@ class BinaryTree
         Step(Root, "");
     }
 
-    public void Do(Node current)
+    private void Do(Node current)
     {
         if (_currentDepth == TreeDepth)
             return;
@@ -93,7 +93,7 @@ class BinaryTree
         }
     }
 
-    public void PrintNode(Node current) // just to check the tree
+    private void PrintNode(Node current) // just to check the tree
     {
         if (current == null)
             return;
@@ -110,7 +110,7 @@ class BinaryTree
         _currentDepth--;
     }
 
-    public void Step(Node current, string combination)
+    private void Step(Node current, string combination)
     {
         combination += current.Data;
 
