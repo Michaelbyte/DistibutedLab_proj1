@@ -40,11 +40,3 @@ static void Calculate(int n, int m, string prefix = null)
 Calculate(1, 64);
 
 Console.ReadKey();
-
-static void PrintEnumerable<T>(IEnumerable<T> values)
-{
-    foreach (var value in values)
-        Console.Write(value + " ");
-
-    Console.WriteLine();
-}
