@@ -37,11 +37,11 @@ class BinaryTree
 {
     public Node Root { get; private set; }
     public int TreeDepth { get; private set; }
+    public int CombinationsGenerated { get; set; } = 0;
+    public int NodesAmount { get; set; } = 0;
 
     private int _currentDepth = 0;
     private List<Node> markedNodes = new List<Node>();
-    public int NodesAmount { get; set; } = 0;
-    public int CombinationsGenerated { get; set; } = 0;
 
     public BinaryTree(string data, int keyLength)
     {
