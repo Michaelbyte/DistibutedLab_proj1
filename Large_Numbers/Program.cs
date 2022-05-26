@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 using Large_Numbers;
 
 start: Console.Write("Enter key length in bits: ");
@@ -6,7 +7,7 @@ start: Console.Write("Enter key length in bits: ");
 var input = Console.ReadLine();
 var isCorrectInput = int.TryParse(input, out int keyLength);
 
-if (!isCorrectInput || keyLength < 8)
+if (!isCorrectInput || keyLength < 8 || keyLength % 4 != 0)
 {
     Console.WriteLine($"Incorrent input: {input}");
     goto start;
@@ -36,6 +37,8 @@ switch (keyInfo.Key)
         {
             for (int i = 0; i < 4; i++)
             {
+                if (task.IsCompleted)
+                    break;
                 Thread.Sleep(1000);
                 Console.Write(".");
             }
@@ -53,6 +56,7 @@ switch (keyInfo.Key)
         Console.Write("                ");
         Console.SetCursorPosition(0, locationNew.Top);
         Console.WriteLine("Found");
+        Console.WriteLine("runtime: " + task.Result);
 
         break;
 }
@@ -72,10 +76,23 @@ static string GenerateKey(int keyLength)
     return ConvertToHex(bits);
 }
 
-static Task FindAsync(int n, int m, string key)
+static async Task<string> FindAsync(int n, int m, string key)
 {
     var stopToken = new StopToken();
-    return Task.Run(() => Calculate(n, m, keyToFind: key, token: stopToken));
+
+    var sw = new Stopwatch();
+    sw.Start();
+
+    await Task.Run(() => Calculate(n, m, keyToFind: key, token: stopToken));
+
+    sw.Stop();
+    TimeSpan ts = sw.Elapsed;
+
+    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+    
+    return elapsedTime;
 }
 
 static string ConvertToHex(string bits)
